@@ -1,3 +1,6 @@
+def sum_team_goals_minimum( team_players : list ) -> int:
+    return sum(player['goles_meta'] for player in team_players)
+
 def assoc_levels_minimum_goals(levels : list) -> dict:
     level_minimum = {}
     for level in levels:
@@ -6,9 +9,16 @@ def assoc_levels_minimum_goals(levels : list) -> dict:
         else: return {'ok':False, 'description_error': f"Unexpected name of level: {level_name}"}
     return level_minimum
 
+
 def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
     player['goles_minimos'] = min_goals
     return player
+
+def assoc_minimum_goals_to_players( players_json : dict, levels_goals : dict) -> dict:
+    for player in players_json:
+        player['goles_meta'] = levels_goals.get( player.get('nivel') , None)
+    return players_json
+    
 
 def sum_scored_goals_team( team_players : list ) -> int:
     return sum(player['goles'] for player in team_players)
@@ -26,8 +36,8 @@ def calculate_teams_compliance( players_json ):
     compliance = {}
     for team in teams:
         print("Team a evaluar:", team, ":>",teams[team])
-        teams[team]['anotados'] = sum_scored_goals_team(teams[team])
-        
+        compliance[team]['anotados'] = sum_scored_goals_team(teams[team])
+        compliance[team]['meta'] = sum_team_goals_minimum(teams[team])
         #teams[team]['meta'] = sum_goal_team( teams[team] )
 
 

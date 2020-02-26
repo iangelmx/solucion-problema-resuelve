@@ -21,21 +21,26 @@
 from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS, cross_origin
 import tasks.calculate_salaries
+from tasks.calculate_salaries import *
 import json
 
 env = json.loads( open("settings.json", "r").read() )
 FLASK_PREFIX_APP = env['prefix_api']
 
 app = Flask(__name__)
+current_levels = []
 
 @app.route(FLASK_PREFIX_APP+"/receive-levels", methods=["POST"])
 def receive_levels():
-    input_data = request.json
+    new_levels = request.json
+    current_levels = assoc_levels_minimum_goals( new_levels )
 
 @app.route(FLASK_PREFIX_APP+"/calculate-salaries", methods=["POST"])
 def receive_players():
     input_data = request.json
 
+    players = assoc_minimum_goals_to_players( input_data, current_levels)
+    
     compliance_teams = calculate_teams_compliance(input_data)
 
     for jugador in input_data:
@@ -46,4 +51,5 @@ def receive_players():
     
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0',debug=True)
+    current_levels = assoc_levels_minimum_goals( env['metas_predeterminadas'] )
+    app.run(host='0.0.0.0',debug=True)
