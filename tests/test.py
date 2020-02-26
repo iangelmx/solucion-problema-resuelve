@@ -3,7 +3,8 @@ import json
 import sys
 sys.path.append("./../")
 
-from tasks.calculate_salaries import separate_players_by_team
+from tasks.calculate_salaries import (separate_players_by_team, sum_scored_goals_team,
+                                        assoc_levels_minimum_goals)
 
 input_calculate_salaries = json.loads(open("input_tests_calculate_salaries.json", "r").read())
 
@@ -13,7 +14,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can sum a list of integers
         """
         data = input_calculate_salaries['test_01']
-        result = separate_players_by_team(data)
+        real_result = separate_players_by_team(data)
 
         result_emulation = {
                 'rojo' : [ 
@@ -57,7 +58,69 @@ class TestCalculateSalaries(unittest.TestCase):
                     },
                 ]
         }
-        self.assertEqual(result, result_emulation)
+        self.assertEqual(real_result, result_emulation)
+
+    def test_sum_scored_goals_team_01(self):
+        """
+        Test that it can sum values of dicts in a dict list
+        """
+        data = input_calculate_salaries['test_sum_scored_goals_team_01']
+
+        real_result = sum_scored_goals_team( data )
+        result_emulation = 19
+        self.assertEqual(real_result, result_emulation)
+
+    def test_sum_scored_goals_team_02(self):
+        """
+        Test that it can sum values of dicts in a dict list
+        """
+        data = input_calculate_salaries['test_sum_scored_goals_team_02']
+
+        real_result = sum_scored_goals_team( data )
+        result_emulation = 37
+        self.assertEqual(real_result, result_emulation)
+
+    def test_assoc_levels_minimum_goals_01(self):
+        """
+        Test that it can assoc levels in dict list to a dict[level] : minimum_goals
+        """
+        data = input_calculate_salaries['test_assoc_levels_minimum_goals_01']
+
+        real_result = assoc_levels_minimum_goals( data )
+        result_emulation = { 
+            'A' : 5,
+            'B' : 10,
+            'C' : 15,
+            'Cuauh' : 20
+         }
+        self.assertEqual(real_result, result_emulation)
+    
+    def test_assoc_levels_minimum_goals_02(self):
+        """
+        Test that it can assoc levels in dict list to a dict[level] : minimum_goals
+        """
+        data = input_calculate_salaries['test_assoc_levels_minimum_goals_02']
+
+        real_result = assoc_levels_minimum_goals( data )
+        result_emulation = { 
+            'ok':False, 'description_error': 'Unexpected name of level: None'
+        }
+        self.assertEqual(real_result, result_emulation)
+        
+    
+    def test_assoc_minimum_goals_to_player_01(self):
+        """
+        Test that it can assoc levels in dict list to a dict[level] : minimum_goals
+        """
+        data = input_calculate_salaries['test_assoc_levels_minimum_goals_02']
+
+        real_result = assoc_levels_minimum_goals( data )
+        result_emulation = { 
+            'ok':False, 'description_error': 'Unexpected name of level: None'
+        }
+        self.assertEqual(real_result, result_emulation)
+        
+
 
 if __name__ == '__main__':
     unittest.main()
