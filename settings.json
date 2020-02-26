@@ -1,0 +1,21 @@
+{
+    "prefix_api":"/resuelve",
+    "metas_predeterminadas":[
+        {
+           "nivel" : "A",
+           "goles_minimos" : 5
+        },
+        {
+           "nivel" : "B",
+           "goles_minimos" : 10
+        },
+        {
+           "nivel" : "C",
+           "goles_minimos" : 15
+        },
+        {
+           "nivel" : "Cuauh",
+           "goles_minimos" : 20
+        }
+     ]
+}
