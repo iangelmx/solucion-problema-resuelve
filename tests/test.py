@@ -5,7 +5,8 @@ sys.path.append("./../")
 
 from tasks.calculate_salaries import (separate_players_by_team, sum_scored_goals_team,
                                         assoc_levels_minimum_goals, assoc_minimum_goals_to_players,
-                                        sum_team_goals_minimum)
+                                        sum_team_goals_minimum, check_player_has_team, get_players_with_team
+                                        )
 
 input_calculate_salaries = json.loads(open("input_tests_calculate_salaries.json", "r").read())
 
@@ -93,7 +94,7 @@ class TestCalculateSalaries(unittest.TestCase):
             'B' : 10,
             'C' : 15,
             'Cuauh' : 20
-         }
+        }
         self.assertEqual(real_result, result_emulation)
     
     def test_assoc_levels_minimum_goals_02(self):
@@ -104,7 +105,9 @@ class TestCalculateSalaries(unittest.TestCase):
 
         real_result = assoc_levels_minimum_goals( data )
         result_emulation = { 
-            'ok':False, 'description_error': 'Unexpected name of level: None'
+            'A' : 5,
+            'B' : 10,
+            'C' : 15
         }
         self.assertEqual(real_result, result_emulation)
         
@@ -117,7 +120,9 @@ class TestCalculateSalaries(unittest.TestCase):
 
         real_result = assoc_levels_minimum_goals( data )
         result_emulation = { 
-            'ok':False, 'description_error': 'Unexpected name of level: None'
+            'A' : 5,
+            'B' : 10,
+            'C' : 15
         }
         self.assertEqual(real_result, result_emulation)
 
@@ -245,6 +250,93 @@ class TestCalculateSalaries(unittest.TestCase):
         real_result = sum_team_goals_minimum( data )
         result_emulation = 25
         self.assertEqual(real_result, result_emulation)
+
+    
+    def test_check_player_has_team_01(self):
+        """
+        Test that it can filter and return only the players with a team or with a valid name of team
+        """
+        data = input_calculate_salaries['test_check_player_has_team_01']['jugador']
+
+        real_result = check_player_has_team( data )
+        result_emulation = {  
+            "nombre":"EL Cuauh",
+            "nivel":"Cuauh",
+            "goles":30,
+            "sueldo":100000,
+            "bono":30000,
+            "sueldo_completo":None,
+            "equipo":"azul",
+            "goles_meta" : 20 
+        }
+        self.assertEqual(real_result, result_emulation)
+
+    def test_check_player_has_team_02(self):
+        """
+        Test that it can filter and return only the players with a team or with a valid name of team
+        """
+        data = input_calculate_salaries['test_check_player_has_team_02']['jugador']
+
+        real_result = check_player_has_team( data )
+        result_emulation = None
+        self.assertEqual(real_result, result_emulation)
+
+    def test_check_player_has_team_03(self):
+        """
+        Test that it can filter and return only the players with a team or with a valid name of team
+        """
+        data = input_calculate_salaries['test_check_player_has_team_03']['jugador']
+
+        real_result = check_player_has_team( data )
+        result_emulation = None
+        self.assertEqual(real_result, result_emulation)
+
+    def test_get_players_with_team_01(self):
+        """
+        Test that it can filter and return only the players with a team or with a valid name of team
+        """
+        data = input_calculate_salaries['test_get_players_with_team_01']
+
+        real_result = get_players_with_team( data )
+        result_emulation = [
+            {  
+                "nombre":"Cosme Fulanito",
+                "nivel":"A",
+                "goles":7,
+                "sueldo":20000,
+                "bono":10000,
+                "sueldo_completo":None,
+                "equipo":"azul",
+                "goles_meta" : 5
+            },
+            {  
+                "nombre":"El Rulo",
+                "nivel":"B",
+                "goles":9,
+                "sueldo":30000,
+                "bono":15000,
+                "sueldo_completo":None,
+                "equipo":"rojo",
+                "goles_meta" : 10
+            } 
+        ]
+        parsing_result = list(real_result)
+        self.assertEqual( parsing_result, result_emulation )
+
+    
+    def test_calculate_teams_compliance_01(self):
+        """
+        Test that it can calculate the compliance of every team
+        """
+        #data = input_calculate_salaries['test_calculate_teams_compliance_01']
+
+        #real_result = calculate_teams_compliance( data )
+        #result_emulation = []
+        #parsing_result = list(real_result)
+        #self.assertEqual( parsing_result, result_emulation )
+
+
+        
         
 
 

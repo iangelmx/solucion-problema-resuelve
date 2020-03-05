@@ -39,7 +39,7 @@ def receive_levels():
 def receive_players():
     input_data = request.json
 
-    players = assoc_minimum_goals_to_players( input_data, current_levels)
+    players = assoc_minimum_goals_to_players( input_data, current_levels )
     
     compliance_teams = calculate_teams_compliance(input_data)
 

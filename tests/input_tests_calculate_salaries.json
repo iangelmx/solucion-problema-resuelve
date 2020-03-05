@@ -263,5 +263,86 @@
          "goles_meta" : 5
       }
    ]
+   ,
+   "test_check_player_has_team_01":{
+      "jugador":{  
+         "nombre":"EL Cuauh",
+         "nivel":"Cuauh",
+         "goles":30,
+         "sueldo":100000,
+         "bono":30000,
+         "sueldo_completo":null,
+         "equipo":"azul",
+         "goles_meta" : 20 
+      }
+   }
+   ,
+   "test_check_player_has_team_02":{
+      "jugador":{  
+         "nombre":"Angel",
+         "nivel":"B",
+         "goles":30,
+         "sueldo":10000,
+         "bono":3000,
+         "sueldo_completo":null,
+         "equipo":null,
+         "goles_meta" : 20 
+      }
+   }
+   ,
+   "test_check_player_has_team_03":{
+      "jugador":{  
+         "nombre":"Joel",
+         "nivel":"C",
+         "goles":15,
+         "sueldo":2600,
+         "bono":500,
+         "sueldo_completo":null,
+         "goles_meta" : 20 
+      }
+   }
+   ,
+   "test_get_players_with_team_01":[
+      {  
+         "nombre":"EL Cuauh",
+         "nivel":"Cuauh",
+         "goles":30,
+         "sueldo":100000,
+         "bono":30000,
+         "sueldo_completo":null,
+         "goles_meta" : 20 
+      },
+      {  
+         "nombre":"Cosme Fulanito",
+         "nivel":"A",
+         "goles":7,
+         "sueldo":20000,
+         "bono":10000,
+         "sueldo_completo":null,
+         "equipo":"azul",
+         "goles_meta" : 5
+      },
+      {  
+         "nombre":"Juan Perez",
+         "nivel":"C",
+         "goles":10,
+         "sueldo":50000,
+         "bono":25000,
+         "sueldo_completo":null,
+         "goles_meta" : 15
+      },
+         {  
+         "nombre":"El Rulo",
+         "nivel":"B",
+         "goles":9,
+         "sueldo":30000,
+         "bono":15000,
+         "sueldo_completo":null,
+         "equipo":"rojo",
+         "goles_meta" : 10
+      } 
+   ]
+   ,
+   "test_calculate_teams_compliance_01":[]
       
 }
