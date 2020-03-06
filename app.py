@@ -39,12 +39,12 @@ def receive_levels():
 def receive_players():
     input_data = request.json
 
-    players = assoc_minimum_goals_to_players( input_data, current_levels)
+    players = assoc_minimum_goals_to_players( input_data, current_levels )
     
-    compliance_teams = calculate_teams_compliance(input_data)
-
-    for jugador in input_data:
-        jugador = tasks.calculate_salaries._calculate_salary_for_player(jugador)
+    compliance_teams = calculate_team_compliances(input_data)
+    
+    #for jugador in input_data:
+    #    jugador = calculate_salary_for_player(jugador)
     
     return jsonify(ok=True, description=input_data)
 

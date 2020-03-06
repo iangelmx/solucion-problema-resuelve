@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+#Time it scripts
+prueba.py
+
 # Distribution / packaging
 .Python
 build/
