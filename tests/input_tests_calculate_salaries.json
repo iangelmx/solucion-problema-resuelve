@@ -343,6 +343,49 @@
       } 
    ]
    ,
-   "test_calculate_teams_compliance_01":[]
-      
+   "test_assoc_team_goal_and_scored_goals_02":{
+      "jugadores":[  
+         {  
+            "nombre":"Juan Perez",
+            "nivel":"A",
+            "goles":10,
+            "sueldo":50000,
+            "bono":25000,
+            "sueldo_completo":null,
+            "equipo":"verde",
+            "goles_meta": 5
+         },
+         {  
+            "nombre":"EL Cuauh",
+            "nivel":"Cuauh",
+            "goles":30,
+            "sueldo":100000,
+            "bono":30000,
+            "sueldo_completo":null,
+            "equipo":"azul",
+            "goles_meta": 20
+         },
+         {  
+            "nombre":"Cosme Fulanito",
+            "nivel":"B",
+            "goles":7,
+            "sueldo":20000,
+            "bono":10000,
+            "sueldo_completo":null,
+            "equipo":"azul",
+            "goles_meta": 10
+         },
+         {  
+            "nombre":"El Rulo",
+            "nivel":"C",
+            "goles":9,
+            "sueldo":30000,
+            "bono":15000,
+            "sueldo_completo":null,
+            "equipo":"rojo",
+            "goles_meta": 15
+         }
+     ]
+   }
+         
 }
