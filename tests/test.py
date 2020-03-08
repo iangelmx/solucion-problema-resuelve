@@ -3,10 +3,12 @@ import json
 import sys
 sys.path.append("./../")
 
+import tasks.constants
 from tasks.calculate_salaries import (separate_players_by_team, sum_scored_goals_team,
                                         assoc_levels_minimum_goals, assoc_minimum_goals_to_players,
                                         sum_team_goals_minimum, check_player_has_team, get_players_with_team,
-                                        assoc_goal_and_scored_goals_per_team, calculate_team_compliances
+                                        assoc_goal_and_scored_goals_per_team, calculate_teams_compliance,
+                                        calculate_generic_compliance
                                         )
 
 input_calculate_salaries = json.loads(open("input_tests_calculate_salaries.json", "r").read())
@@ -372,8 +374,59 @@ class TestCalculateSalaries(unittest.TestCase):
         }
         
         self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_generic_compliance_01(self):
+        """
+        Test that it can calculate de generic compliance according a goal and scored goals
+        when scored is equals or greater than goal
+        """
+
+        data = input_calculate_salaries['test_calculate_generic_compliance']['test_01']
+
+        real_result = calculate_generic_compliance( data['scored_goals'], data['goal_goals'] )
+        result_emulation = {
+            'ok':True, 
+            'status_code':200, 
+            'description':{
+                'value': 100
+            }
+        }
+        self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_generic_compliance_02(self):
+        """
+        Test that it can calculate de generic compliance according a goal and scored goals
+        when scored is smaller than goal
+        """
+
+        data = input_calculate_salaries['test_calculate_generic_compliance']['test_02']
+
+        real_result = calculate_generic_compliance( data['scored_goals'], data['goal_goals'] )
+        result_emulation = {
+            'ok':True, 
+            'status_code':200, 
+            'description':{
+                'value': 50
+            }
+        }
+        self.assertEqual( real_result, result_emulation )
+    def test_calculate_generic_compliance_03(self):
+        """
+        Test that it fails to calculate de generic compliance according a goal and scored goals
+        when goal is zero
+        """
+
+        data = input_calculate_salaries['test_calculate_generic_compliance']['test_03']
+
+        real_result = calculate_generic_compliance( data['scored_goals'], data['goal_goals'] )
+        result_emulation = {
+            'ok':False, 
+            'status_code':500, 
+            'description':"Zero value provided for goal."
+        }
+        self.assertEqual( real_result, result_emulation )
     
-    def test_calculate_team_compliances_01(self):
+    def test_calculate_teams_compliance_01(self):
         """
         Test that it can assoc the goal and the scored goals 
         for each team of a list of players
@@ -381,7 +434,7 @@ class TestCalculateSalaries(unittest.TestCase):
 
         data = input_calculate_salaries['test_assoc_minimum_goals_to_players_02']['jugadores']
 
-        real_result = calculate_team_compliances( data )
+        real_result = calculate_teams_compliance( data )
         result_emulation = {
             'rojo' : (19*100/20),
             'azul': 100
@@ -390,7 +443,7 @@ class TestCalculateSalaries(unittest.TestCase):
         self.assertEqual( real_result, result_emulation )
 
     
-    def test_calculate_team_compliances_02(self):
+    def test_calculate_teams_compliance_02(self):
         """
         Test that it can assoc the goal and the scored goals 
         for each team of a list of players
@@ -398,7 +451,7 @@ class TestCalculateSalaries(unittest.TestCase):
 
         data = input_calculate_salaries['test_assoc_team_goal_and_scored_goals_02']['jugadores']
 
-        real_result = calculate_team_compliances( data )
+        real_result = calculate_teams_compliance( data )
         result_emulation = {
             'verde' : 100,
             'rojo' : (9*100/15),
@@ -406,6 +459,9 @@ class TestCalculateSalaries(unittest.TestCase):
         }
         
         self.assertEqual( real_result, result_emulation )
+
+    
+    
 
 
         

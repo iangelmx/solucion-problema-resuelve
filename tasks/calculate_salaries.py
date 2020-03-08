@@ -1,3 +1,11 @@
+import tasks.constants
+from copy import copy
+
+def get_response_correct_calculation( value : object ) -> dict:
+    response = copy(tasks.constants.CORRECT_CALCULATION)
+    response['description']['value'] = value
+    return response
+
 def sum_team_goals_minimum( team_players : list ) -> int:
     return sum(player['goles_meta'] for player in team_players)
 
@@ -57,43 +65,72 @@ def assoc_goal_and_scored_goals_per_team( players_json : dict ) -> dict:
         goal_and_scored_goals_teams[team]['meta'] = sum_team_goals_minimum(teams[team])
     return goal_and_scored_goals_teams
 
-def validate_dict_output_funct( response_funct : object ) -> object:
+def validate_dict_output_funct( response_funct : object ) -> bool:
     if response_funct.get('ok') == True:
         return True
     else:
         print(f"Status error: {response_funct.get('status_code')}. Details: {response_funct.get('description')}")
-        return None
+        return False
+
+def calculate_generic_compliance( scored : int, goal : int ) -> dict:
+    try:
+        compliance = scored * 100 / goal
+        return get_response_correct_calculation(compliance)
+    except ZeroDivisionError:
+        return tasks.constants.INCORRECT_CALCULATION
 
 def calculate_compliance_of_team( team_data : dict ) -> dict:
-    
-    if team_data.get('anotados',0) > team_data.get('meta'):
-        team_compliance = 100
-    else:
-        try:
-            team_compliance = team_data.get('anotados',0) * 100 / team_data.get('meta')
-        except ZeroDivisionError:
-            return {'ok':False, 'status_code':500, 'description':f"Missing key 'meta' or Zero value in 'meta' for:{team_data}"}
-    
-    return {'ok':True, 'status_code':200, 'description':{'value':team_compliance}}
+    team_compliance_val = 100
+    if team_data.get('anotados',0) < team_data.get('meta'):
+        team_compliance_dict = calculate_generic_compliance( team_data.get('anotados',0), team_data.get('meta',0) )
+        if validate_dict_output_funct(team_compliance_dict):
+            team_compliance_val = team_compliance_dict.get('description',{}).get('value',0)
+        else:
+            return tasks.constants.INCORRECT_CALCULATION
+    return get_response_correct_calculation(team_compliance_val)
 
-def calculate_team_compliances( players_json : dict ) -> dict:
+def calculate_teams_compliance( players_json : dict ) -> dict:
     teams_goal_and_scored_goals = assoc_goal_and_scored_goals_per_team( players_json )
     compliances = {}
     for team in teams_goal_and_scored_goals:
         compliance_team = calculate_compliance_of_team( teams_goal_and_scored_goals[team] )
-        if validate_dict_output_funct( compliance_team ) is not None:
-            #print(f"Compliance_of team {team}:", compliance_team)
+        if validate_dict_output_funct( compliance_team ):
             compliances[team] = compliance_team.get('description').get('value')
     return compliances
 
-def calculate_individual_compliances():
-    pass
-
-
-def get_bonus_player(player):
+def calculate_individual_compliance( player : dict ) -> dict:
+    scored = player.get('goles', 0)
+    goal = player.get('goles_meta', 0)
+    compliance = 100
+    if scored < goal:
+        compliance = calculate_generic_compliance( scored, goal )
+    if validate_dict_output_funct(compliance):
+        compliance = compliance.get('description',{}).get('value',0)
+    else:
+        return tasks.constants.INCORRECT_CALCULATION
+    return get_response_correct_calculation(compliance)
     
+
+def get_team_compliance( player : dict ) -> float:
+    
+
+def calculate_joint_compliance( individual_compliance:float, team_compliance :float ) -> float:
     pass
 
-def calculate_salary_for_player(player):
+def calculate_bonus_player( joint_compliance : float, complete_bonus : float ) -> float:
+    pass
+
+def get_bonus_player(player : dict) -> float:
+    individual_compliance = calculate_individual_compliance( player )
+    team_compliance = get_team_compliance( player )
+
+    joint_compliance = calculate_joint_compliance( individual_compliance, team_compliance )
+
+    final_bonus = calculate_bonus_player( joint_compliance, player.get('bono') )
+    
+    return final_bonus
+
+def calculate_salary_for_player(player : dict) -> float:
     fixed_salary = player.get('salario')
-    bonus = get_bonus_player(player)    
+    bonus = get_bonus_player(player)
+    return fixed_salary + bonus

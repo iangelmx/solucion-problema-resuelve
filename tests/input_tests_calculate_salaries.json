@@ -387,5 +387,20 @@
          }
      ]
    }
+   ,
+   "test_calculate_generic_compliance":{
+      "test_01":{
+         "scored_goals" : 10,
+         "goal_goals" : 10
+      },
+      "test_02":{
+         "scored_goals" : 10,
+         "goal_goals" : 20
+      },
+      "test_03":{
+         "scored_goals" : 15,
+         "goal_goals" : 0
+      }
+   }
          
 }
