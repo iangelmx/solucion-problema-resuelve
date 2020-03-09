@@ -42,6 +42,8 @@ def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
     return player_copy
 
 def assoc_minimum_goals_to_players( players_json : dict, levels_goals : dict) -> dict:
+    print("Players json:", players_json)
+    print("\n\n\nLevels_goals:", levels_goals)
     maping_goals_players = map( 
         lambda x: x.update( { 'goles_minimos' : levels_goals.get( x.get('nivel') ) } ) or x , 
         players_json 
