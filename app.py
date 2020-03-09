@@ -3,7 +3,7 @@
 #
 # (C) 2020 Angel Negib Ramirez Alvarez, CDMX, Mexico
 # Released under GNU Public License (GPL)
-# email iangelmx.isc@gmail.com {
+# email iangelmx.isc@gmail.com 
 # Este script calcula el salario completo del Resuelve FC
 # con base en un JSON de entrada. El problema a resolver se
 # encuentra disponible en:
@@ -13,7 +13,7 @@
 # que soporten el paradigma de la programación estructurada.
 # La documentación completa de la solución está disponible en
 # el archivo README del repositorio:
-# https://github.com/iangelmx/solucion-prueba-resuelve
+# https://github.com/iangelmx/solucion-problema-resuelve
 # -----------------------------------------------------------
 
 
@@ -28,6 +28,24 @@ FLASK_PREFIX_APP = env['prefix_api']
 
 app = Flask(__name__)
 current_levels = []
+
+'''ERROR HANDLERS'''
+@app.errorhandler(404)
+def not_found(error):
+	return render_template('./error_pages/40X.html', number_err=404, label_err="Not Found", text_error="El recurso que estás solicitando no existe."),404
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+	return render_template('./error_pages/40X.html', number_err=405, label_err="Method Not Allowed", text_error="La ruta estipulada no tolera el método solicitado."),405
+
+@app.errorhandler(410)
+def file_gone(error):
+    return render_template('./error_pages/40X.html', number_err=405, label_err="Gone", text_error="Gone, the file you search now have gone."),410
+
+@app.errorhandler(500)
+def intServErr(error):
+	return render_template('./error_pages/50X.html',errorInfo=error),500
+
 
 @app.route("/")
 def pred_route():
