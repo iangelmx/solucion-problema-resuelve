@@ -23,9 +23,13 @@ def sum_team_goals_minimum( team_players : list ) -> int:
     except Exception:
         return {'ok':False, 'status_code': 404,'description':'There is not indicated "goles_minimos" for at least 1 team'}
 
+def check_level_goal( level ):
+    if level.get('nivel') and level.get('goles_minimos'):
+        return level
+
 def assoc_levels_minimum_goals(levels : list) -> dict:
     level_minimum = {}
-    valid_levels = filter( lambda x: x if x.get('nivel') is not None else None , levels)
+    valid_levels = filter( check_level_goal , levels)
 
     for level in valid_levels:
         level_minimum[ level.get('nivel') ] = level.get('goles_minimos')
@@ -76,14 +80,13 @@ def add_key_value_in_dict( key : object, dict_in : dict, assign_value = None ) -
         return None
 
 def assoc_goal_and_scored_goals_per_team( players_json : dict ) -> dict:
-    errors = []
     teams = separate_players_by_team( players_json )
     goal_and_scored_goals_teams = {}
     for team in teams:
         goal_and_scored_goals_teams = add_key_value_in_dict(team, goal_and_scored_goals_teams, {})
         goal_and_scored_goals_teams[team]['anotados'] = sum_scored_goals_team(teams[team])
         goal_and_scored_goals_teams[team]['meta'] = sum_team_goals_minimum(teams[team])
-    return goal_and_scored_goals_teams, errors.append( goal_and_scored_goals_teams[team]['anotados'] )
+    return goal_and_scored_goals_teams
 
 def validate_dict_output_funct( response_funct : object ) -> bool:
     if response_funct.get('ok') == True:

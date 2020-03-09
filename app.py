@@ -18,7 +18,7 @@
 
 
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, request, redirect, render_template
 import tasks.calculate_salaries
 from tasks.calculate_salaries import *
 import json
@@ -29,11 +29,16 @@ FLASK_PREFIX_APP = env['prefix_api']
 app = Flask(__name__)
 current_levels = []
 
+@app.route("/")
+def pred_route():
+    return render_template("main.html")
+
 @app.route(FLASK_PREFIX_APP+"/receive-levels", methods=["POST"])
 def receive_levels():
     global current_levels
     new_levels = request.json
     current_levels = assoc_levels_minimum_goals( new_levels )
+    return jsonify(ok=True, status_code=200, description={'levels_received':current_levels})
 
 @app.route(FLASK_PREFIX_APP+"/calculate-salaries", methods=["POST"])
 def receive_players():
@@ -42,12 +47,10 @@ def receive_players():
     players = assoc_minimum_goals_to_players( input_data, current_levels )
     
     teams_compliance = calculate_teams_compliance(input_data)
-    if return_fatal_error_to_client(teams_compliance) != False:
-        return jsonify(teams_compliance)
 
     players = [ get_complete_salary_for_player(x, teams_compliance) for x in players ]
     
-    return jsonify(ok=True, status_code = 200, description={'salaries_comprenhension':players})
+    return jsonify(ok=True, status_code = 200, description={'players_salary':players})
 
     
 

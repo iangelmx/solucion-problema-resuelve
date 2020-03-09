@@ -1,7 +1,7 @@
 gunicorn==20.0.4
 Flask==1.0.2
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2>=2.10.1
 Click==7.0
 Werkzeug==0.15.3
 MarkupSafe==1.1.0
