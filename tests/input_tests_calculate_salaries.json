@@ -177,7 +177,7 @@
              "bono":25000,
              "sueldo_completo":null,
              "equipo":"rojo",
-             "goles_meta": 5
+             "goles_minimos": 5
          },
          {  
              "nombre":"EL Cuauh",
@@ -187,7 +187,7 @@
              "bono":30000,
              "sueldo_completo":null,
              "equipo":"azul",
-             "goles_meta": 20
+             "goles_minimos": 20
          },
          {  
              "nombre":"Cosme Fulanito",
@@ -197,7 +197,7 @@
              "bono":10000,
              "sueldo_completo":null,
              "equipo":"azul",
-             "goles_meta": 10
+             "goles_minimos": 10
          },
          {  
              "nombre":"El Rulo",
@@ -207,7 +207,7 @@
              "bono":15000,
              "sueldo_completo":null,
              "equipo":"rojo",
-             "goles_meta": 15
+             "goles_minimos": 15
          }
      ],
       "niveles_goles_assoc":{
@@ -227,7 +227,7 @@
          "bono":25000,
          "sueldo_completo":null,
          "equipo":"rojo",
-         "goles_meta" : 15
+         "goles_minimos" : 15
       },
          {  
          "nombre":"El Rulo",
@@ -237,7 +237,7 @@
          "bono":15000,
          "sueldo_completo":null,
          "equipo":"rojo",
-         "goles_meta" : 10
+         "goles_minimos" : 10
       } 
    ]
    ,
@@ -250,7 +250,7 @@
          "bono":30000,
          "sueldo_completo":null,
          "equipo":"azul",
-         "goles_meta" : 20 
+         "goles_minimos" : 20 
       },
       {  
          "nombre":"Cosme Fulanito",
@@ -260,7 +260,7 @@
          "bono":10000,
          "sueldo_completo":null,
          "equipo":"azul",
-         "goles_meta" : 5
+         "goles_minimos" : 5
       }
    ]
    ,
@@ -273,7 +273,7 @@
          "bono":30000,
          "sueldo_completo":null,
          "equipo":"azul",
-         "goles_meta" : 20 
+         "goles_minimos" : 20 
       }
    }
    ,
@@ -286,7 +286,7 @@
          "bono":3000,
          "sueldo_completo":null,
          "equipo":null,
-         "goles_meta" : 20 
+         "goles_minimos" : 20 
       }
    }
    ,
@@ -298,7 +298,7 @@
          "sueldo":2600,
          "bono":500,
          "sueldo_completo":null,
-         "goles_meta" : 20 
+         "goles_minimos" : 20 
       }
    }
    ,
@@ -310,7 +310,7 @@
          "sueldo":100000,
          "bono":30000,
          "sueldo_completo":null,
-         "goles_meta" : 20 
+         "goles_minimos" : 20 
       },
       {  
          "nombre":"Cosme Fulanito",
@@ -320,7 +320,7 @@
          "bono":10000,
          "sueldo_completo":null,
          "equipo":"azul",
-         "goles_meta" : 5
+         "goles_minimos" : 5
       },
       {  
          "nombre":"Juan Perez",
@@ -329,7 +329,7 @@
          "sueldo":50000,
          "bono":25000,
          "sueldo_completo":null,
-         "goles_meta" : 15
+         "goles_minimos" : 15
       },
          {  
          "nombre":"El Rulo",
@@ -339,7 +339,7 @@
          "bono":15000,
          "sueldo_completo":null,
          "equipo":"rojo",
-         "goles_meta" : 10
+         "goles_minimos" : 10
       } 
    ]
    ,
@@ -353,7 +353,7 @@
             "bono":25000,
             "sueldo_completo":null,
             "equipo":"verde",
-            "goles_meta": 5
+            "goles_minimos": 5
          },
          {  
             "nombre":"EL Cuauh",
@@ -363,7 +363,7 @@
             "bono":30000,
             "sueldo_completo":null,
             "equipo":"azul",
-            "goles_meta": 20
+            "goles_minimos": 20
          },
          {  
             "nombre":"Cosme Fulanito",
@@ -373,7 +373,7 @@
             "bono":10000,
             "sueldo_completo":null,
             "equipo":"azul",
-            "goles_meta": 10
+            "goles_minimos": 10
          },
          {  
             "nombre":"El Rulo",
@@ -383,7 +383,7 @@
             "bono":15000,
             "sueldo_completo":null,
             "equipo":"rojo",
-            "goles_meta": 15
+            "goles_minimos": 15
          }
      ]
    }
@@ -402,5 +402,88 @@
          "goal_goals" : 0
       }
    }
-         
+   ,
+   "test_calculate_joint_compliance":{
+      "test_01":{
+         "team_compliance":100,
+         "individual_compliance" : 95
+      },
+      "test_02":{
+         "team_compliance":86,
+         "individual_compliance" : 95
+      },
+      "test_03":{
+         "team_compliance":67.889,
+         "individual_compliance" : 100
+      }
+   }
+   ,
+   "test_calculate_bonus_player":{
+      "test_01":{
+         "joint_compliance":100,
+         "bonus" : 50000
+      },
+      "test_02":{
+         "joint_compliance":97.5,
+         "bonus" : 25000
+      },
+      "test_03":{
+         "joint_compliance":25.6587,
+         "bonus" : 45000
+      }
+   }
+   ,
+   "test_get_bonus_player":{
+      "test_01":{
+         "player":{  
+            "nombre":"Juan Perez",
+            "nivel":"C",
+            "goles":10,
+            "sueldo":50000,
+            "bono":25000,
+            "sueldo_completo":null,
+            "equipo":"rojo",
+            "goles_minimos": 15
+         },
+         "teams_compliance": { 
+            "rojo" : 95,
+            "verde" : 100,
+            "azul" : 49.6854874
+        }
+      },
+      "test_02":{
+         "player":{  
+            "nombre":"EL Cuauh",
+            "nivel":"Cuauh",
+            "goles":30,
+            "sueldo":100000,
+            "bono":30000,
+            "sueldo_completo":null,
+            "equipo":"azul",
+            "goles_minimos": 20
+        },
+         "teams_compliance": { 
+            "rojo" : 89.99,
+            "verde" : 95.5,
+            "azul" : 68.59
+        }
+      },
+      "test_03":{
+         "player":{  
+            "nombre":"Joel",
+            "nivel":"C",
+            "goles":12,
+            "sueldo":2600,
+            "bono":500,
+            "sueldo_completo":null,
+            "goles_minimos" : 15 
+         },
+         "teams_compliance": { 
+            "rojo" : 95,
+            "verde" : 100,
+            "azul" : 49.6854874
+        }
+      }
+   }
+
 }

@@ -8,7 +8,8 @@ from tasks.calculate_salaries import (separate_players_by_team, sum_scored_goals
                                         assoc_levels_minimum_goals, assoc_minimum_goals_to_players,
                                         sum_team_goals_minimum, check_player_has_team, get_players_with_team,
                                         assoc_goal_and_scored_goals_per_team, calculate_teams_compliance,
-                                        calculate_generic_compliance
+                                        calculate_generic_compliance, calculate_joint_compliance,
+                                        calculate_bonus_player, get_bonus_player, calculate_salary_for_player
                                         )
 
 input_calculate_salaries = json.loads(open("input_tests_calculate_salaries.json", "r").read())
@@ -147,7 +148,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":25000,
                 "sueldo_completo":None,
                 "equipo":"rojo",
-                "goles_meta": 15
+                "goles_minimos": 15
             },
             {  
                 "nombre":"EL Cuauh",
@@ -157,7 +158,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":30000,
                 "sueldo_completo":None,
                 "equipo":"azul",
-                "goles_meta": 20
+                "goles_minimos": 20
             },
             {  
                 "nombre":"Cosme Fulanito",
@@ -167,7 +168,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":10000,
                 "sueldo_completo":None,
                 "equipo":"azul",
-                "goles_meta": 5
+                "goles_minimos": 5
             },
             {  
                 "nombre":"El Rulo",
@@ -177,7 +178,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":15000,
                 "sueldo_completo":None,
                 "equipo":"rojo",
-                "goles_meta": 10
+                "goles_minimos": 10
             }
         ]
         self.assertEqual(real_result, result_emulation)
@@ -199,7 +200,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":25000,
                 "sueldo_completo":None,
                 "equipo":"rojo",
-                "goles_meta": 5
+                "goles_minimos": 5
             },
             {  
                 "nombre":"EL Cuauh",
@@ -209,7 +210,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":30000,
                 "sueldo_completo":None,
                 "equipo":"azul",
-                "goles_meta": 20
+                "goles_minimos": 20
             },
             {  
                 "nombre":"Cosme Fulanito",
@@ -219,7 +220,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":10000,
                 "sueldo_completo":None,
                 "equipo":"azul",
-                "goles_meta": 10
+                "goles_minimos": 10
             },
             {  
                 "nombre":"El Rulo",
@@ -229,7 +230,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":15000,
                 "sueldo_completo":None,
                 "equipo":"rojo",
-                "goles_meta": 15
+                "goles_minimos": 15
             }
         ]
         self.assertEqual(real_result, result_emulation)
@@ -270,7 +271,7 @@ class TestCalculateSalaries(unittest.TestCase):
             "bono":30000,
             "sueldo_completo":None,
             "equipo":"azul",
-            "goles_meta" : 20 
+            "goles_minimos" : 20 
         }
         self.assertEqual(real_result, result_emulation)
 
@@ -310,7 +311,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":10000,
                 "sueldo_completo":None,
                 "equipo":"azul",
-                "goles_meta" : 5
+                "goles_minimos" : 5
             },
             {  
                 "nombre":"El Rulo",
@@ -320,7 +321,7 @@ class TestCalculateSalaries(unittest.TestCase):
                 "bono":15000,
                 "sueldo_completo":None,
                 "equipo":"rojo",
-                "goles_meta" : 10
+                "goles_minimos" : 10
             } 
         ]
         parsing_result = list(real_result)
@@ -459,6 +460,173 @@ class TestCalculateSalaries(unittest.TestCase):
         }
         
         self.assertEqual( real_result, result_emulation )
+    
+    def test_calculate_joint_compliance_01(self):
+        """
+        Test that it calculate the joint compliance like an average of 2 compliances, 
+        the team compliance and individual compliance
+        """
+
+        data = input_calculate_salaries['test_calculate_joint_compliance']['test_01']
+
+        real_result = calculate_joint_compliance( data['individual_compliance'], data['team_compliance'] )
+        result_emulation = 97.5
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_calculate_joint_compliance_02(self):
+        """
+        Test that it calculate the joint compliance like an average of 2 compliances, 
+        the team compliance and individual compliance
+        """
+
+        data = input_calculate_salaries['test_calculate_joint_compliance']['test_02']
+
+        real_result = calculate_joint_compliance( data['individual_compliance'], data['team_compliance'] )
+        result_emulation = 90.5
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_calculate_joint_compliance_03(self):
+        """
+        Test that it calculate the joint compliance like an average of 2 compliances, 
+        the team compliance and individual compliance
+        """
+
+        data = input_calculate_salaries['test_calculate_joint_compliance']['test_03']
+
+        real_result = calculate_joint_compliance( data['individual_compliance'], data['team_compliance'] )
+        result_emulation = 83.9445
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_calculate_bonus_player_01(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_calculate_bonus_player']['test_01']
+
+        real_result = calculate_bonus_player( data['joint_compliance'], data['bonus'] )
+        result_emulation = 50000
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_calculate_bonus_player_02(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_calculate_bonus_player']['test_02']
+
+        real_result = calculate_bonus_player( data['joint_compliance'], data['bonus'] )
+        result_emulation = 24375
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_calculate_bonus_player_03(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_calculate_bonus_player']['test_03']
+
+        real_result = calculate_bonus_player( data['joint_compliance'], data['bonus'] )
+        result_emulation = 11546.415
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_get_bonus_player_01(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_get_bonus_player']['test_01']
+        real_result = get_bonus_player( data['player'], data['teams_compliance'] )
+        #i_c = (10*100/15)
+        #t_c = ( 95 )
+        #j_c = ((10*100/15) + 95)/2
+        #f_b = 25000 * (((10*100/15) + 95)/2)/100
+        result_emulation = 25000 * (((10*100/15) + 95)/2)/100
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_get_bonus_player_02(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_get_bonus_player']['test_02']
+        real_result = get_bonus_player( data['player'], data['teams_compliance'] )
+        #i_c = 100
+        #t_c = ( 68.59 )
+        #j_c = 84.295
+        #f_b = 30000 * ( 84.295 )/100
+        result_emulation = 30000 * ( 84.295 )/100
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_get_bonus_player_03(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_get_bonus_player']['test_03']
+        real_result = get_bonus_player( data['player'], data['teams_compliance'] )
+        #i_c = 80
+        #t_c = 0
+        #j_c = 40
+        #f_b = 500 * ( 40 )/100
+        result_emulation = 200
+        self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_salary_for_player_01(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_get_bonus_player']['test_01']
+        real_result = calculate_salary_for_player( data['player'], data['teams_compliance'] )
+        #i_c = (10*100/15)
+        #t_c = ( 95 )
+        #j_c = ((10*100/15) + 95)/2
+        #f_b = 25000 * (((10*100/15) + 95)/2)/100
+        #s = 50000
+        result_emulation = (25000 * (((10*100/15) + 95)/2)/100) + 50000
+        self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_salary_for_player_02(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_get_bonus_player']['test_02']
+        real_result = calculate_salary_for_player( data['player'], data['teams_compliance'] )
+        #i_c = 100
+        #t_c = ( 68.59 )
+        #j_c = 84.295
+        #f_b = 30000 * ( 84.295 )/100
+        #s = 100000
+        result_emulation = 125288.5
+        self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_salary_for_player_03(self):
+        """
+        Test that it calculate the final bonus of a player according the joint compliance
+        and the bonus
+        """
+
+        data = input_calculate_salaries['test_get_bonus_player']['test_03']
+        real_result = calculate_salary_for_player( data['player'], data['teams_compliance'] )
+        #i_c = 80
+        #t_c = 0
+        #j_c = 40
+        #f_b = 500 * ( 40 )/100
+        #s = 2600
+        result_emulation = 2800
+        self.assertEqual( real_result, result_emulation )
+
+    
 
     
     
