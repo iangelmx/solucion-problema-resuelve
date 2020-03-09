@@ -27,7 +27,7 @@ env = json.loads( open("settings.json", "r").read() )
 FLASK_PREFIX_APP = env['prefix_api']
 
 app = Flask(__name__)
-current_levels = []
+current_levels = assoc_levels_minimum_goals( env['metas_predeterminadas'] )
 
 '''ERROR HANDLERS'''
 @app.errorhandler(404)
@@ -73,5 +73,4 @@ def receive_players():
     
 
 if __name__ == '__main__':
-    current_levels = assoc_levels_minimum_goals( env['metas_predeterminadas'] )
     app.run(host='0.0.0.0',debug=True, port=443)
