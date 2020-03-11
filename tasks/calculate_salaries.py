@@ -1,16 +1,49 @@
 import tasks.constants
 from copy import copy
 
+'''Generic functions'''
+
+def remove_dict_keys( keys_to_remove:list , dictionary : dict ) -> dict:
+    new_dict = { key : value for (key, value) in dictionary.items() if key not in keys_to_remove }
+    return new_dict
+
+def add_key_value_in_dict( key : object, dict_in : dict, assign_value = None ) -> dict:
+    new_dict = copy(dict_in)
+    if key not in new_dict:
+        new_dict[key] = assign_value
+        return new_dict
+    else:
+        return None
+
 def return_fatal_error_to_client( response_funct ):
     if isinstance(response_funct, dict) and response_funct.get('ok') == False:
         return response_funct
     else:
         return False
 
-def remove_dict_keys( keys_to_remove:list , dictionary : dict ) -> dict:
-    new_dict = { key : value for (key, value) in dictionary.items() if key not in keys_to_remove }
-    return new_dict
-    
+def verify_process_output( players : list ) -> tuple:
+    try:
+        if len(players) > 0:
+            return 200, True
+        else:
+            return 400, False
+    except Exception as ex:
+        print("Warning while checking output, players:",players)
+        return 500, False
+
+
+''' Functions to map, filter or reduce '''
+
+def check_level_goal( level ):
+    if isinstance(level, dict) and level.get('nivel') and level.get('goles_minimos'):
+        return level
+
+def check_player_has_team( player : dict ) -> dict:
+    if player.get('equipo'):
+        return player
+
+
+'''Kind of helpers'''
 
 def get_response_correct_calculation( value : object ) -> dict:
     response = copy(tasks.constants.CORRECT_CALCULATION)
@@ -23,9 +56,7 @@ def sum_team_goals_minimum( team_players : list ) -> int:
     except Exception:
         return {'ok':False, 'status_code': 404,'description':'There is not indicated "goles_minimos" for at least 1 team'}
 
-def check_level_goal( level ):
-    if level.get('nivel') and level.get('goles_minimos'):
-        return level
+
 
 def assoc_levels_minimum_goals(levels : list) -> dict:
     level_minimum = {}
@@ -34,7 +65,10 @@ def assoc_levels_minimum_goals(levels : list) -> dict:
     for level in valid_levels:
         level_minimum[ level.get('nivel') ] = level.get('goles_minimos')
 
-    return level_minimum
+    if len(level_minimum) > 0:
+        return (True, 200, level_minimum)
+    return (False, 400, level_minimum)
+
 
 def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
     player_copy = copy(player)
@@ -42,8 +76,6 @@ def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
     return player_copy
 
 def assoc_minimum_goals_to_players( players_json : dict, levels_goals : dict) -> dict:
-    print("Players json:", players_json)
-    print("\n\n\nLevels_goals:", levels_goals)
     maping_goals_players = map( 
         lambda x: x.update( { 'goles_minimos' : levels_goals.get( x.get('nivel') ) } ) or x , 
         players_json 
@@ -57,10 +89,6 @@ def sum_scored_goals_team( team_players : list ) -> int:
     except KeyError:
         return {'ok':False, 'status_code': 404,'description':'There is not indicated "goles" for at least 1 player'}
 
-def check_player_has_team( player : dict ) -> dict:
-    if player.get('equipo'):
-        return player
-
 def get_players_with_team( players_json : dict ) -> filter:
     return filter( check_player_has_team, players_json )
 
@@ -73,13 +101,6 @@ def separate_players_by_team( players_json : dict ) -> dict:
         else: teams[ team_player ].append( player )
     return teams
 
-def add_key_value_in_dict( key : object, dict_in : dict, assign_value = None ) -> dict:
-    new_dict = copy(dict_in)
-    if key not in new_dict:
-        new_dict[key] = assign_value
-        return new_dict
-    else:
-        return None
 
 def assoc_goal_and_scored_goals_per_team( players_json : dict ) -> dict:
     teams = separate_players_by_team( players_json )
@@ -94,7 +115,7 @@ def validate_dict_output_funct( response_funct : object ) -> bool:
     if response_funct.get('ok') == True:
         return True
     else:
-        print(f"Status error: {response_funct.get('status_code')}. Details: {response_funct.get('description')}")
+        #print(f"Status error: {response_funct.get('status_code')}. Details: {response_funct.get('description')}")
         return False
 
 def calculate_generic_compliance( scored : int, goal : int ) -> dict:
@@ -129,7 +150,7 @@ def calculate_individual_compliance( player : dict ) -> dict:
     scored = player.get('goles', 0)
     goal = player.get('goles_minimos', 0)
     compliance = 100
-    if scored < goal:
+    if scored < goal or not scored or not goal:
         compliance = calculate_generic_compliance( scored, goal )
         if validate_dict_output_funct(compliance):
             compliance = compliance.get('description',{}).get('value',0)

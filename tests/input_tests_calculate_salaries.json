@@ -485,5 +485,28 @@
         }
       }
    }
+   ,
+   "test_calculate_individual_compliance":{
+      "test_01":{
+         "nombre":"Joel",
+         "nivel":"C",
+         "goles":12,
+         "sueldo":2600,
+         "bono":500,
+         "sueldo_completo":null,
+         "goles_minimos" : 15 
+      },
+      "test_02":{
+         "nombre":"Joel",
+         "nivel":"C",
+         "sueldo":2600,
+         "bono":500,
+         "sueldo_completo":null,
+         "goles_minimos" : 15 
+      },
+      "test_03":{
+         "Holi":true
+      }
+   }
 
 }

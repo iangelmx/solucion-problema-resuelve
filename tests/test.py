@@ -9,7 +9,8 @@ from tasks.calculate_salaries import (separate_players_by_team, sum_scored_goals
                                         sum_team_goals_minimum, check_player_has_team, get_players_with_team,
                                         assoc_goal_and_scored_goals_per_team, calculate_teams_compliance,
                                         calculate_generic_compliance, calculate_joint_compliance,
-                                        calculate_bonus_player, get_bonus_player, calculate_salary_for_player
+                                        calculate_bonus_player, get_bonus_player, calculate_salary_for_player,
+                                        calculate_individual_compliance
                                         )
 
 input_calculate_salaries = json.loads(open("input_tests_calculate_salaries.json", "r").read())
@@ -19,6 +20,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can sum a list of integers
         """
+        print("test_separate_players_by_team")
         data = input_calculate_salaries['test_01']
         real_result = separate_players_by_team(data)
 
@@ -70,6 +72,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can sum values of dicts in a dict list
         """
+        print("test_sum_scored_goals_team_01")
         data = input_calculate_salaries['test_sum_scored_goals_team_01']
 
         real_result = sum_scored_goals_team( data )
@@ -80,6 +83,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can sum values of dicts in a dict list
         """
+        print("test_sum_scored_goals_team_02")
         data = input_calculate_salaries['test_sum_scored_goals_team_02']
 
         real_result = sum_scored_goals_team( data )
@@ -90,44 +94,43 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can assoc levels in dict list to a dict[level] : minimum_goals
         """
+        print("test_assoc_levels_minimum_goals_01")
         data = input_calculate_salaries['test_assoc_levels_minimum_goals_01']
 
         real_result = assoc_levels_minimum_goals( data )
-        result_emulation = { 
+        result_emulation = (True, 200, { 
             'A' : 5,
             'B' : 10,
             'C' : 15,
             'Cuauh' : 20
-        }
+        })
         self.assertEqual(real_result, result_emulation)
     
     def test_assoc_levels_minimum_goals_02(self):
         """
         Test that it can assoc levels in dict list to a dict[level] : minimum_goals
         """
+        print("test_assoc_levels_minimum_goals_02")
         data = input_calculate_salaries['test_assoc_levels_minimum_goals_02']
 
         real_result = assoc_levels_minimum_goals( data )
-        result_emulation = { 
+        result_emulation = (True, 200, { 
             'A' : 5,
             'B' : 10,
             'C' : 15
-        }
+        })
         self.assertEqual(real_result, result_emulation)
-        
     
-    def test_assoc_minimum_goals_to_player_01(self):
+    def test_assoc_levels_minimum_goals_03(self):
         """
         Test that it can assoc levels in dict list to a dict[level] : minimum_goals
         """
-        data = input_calculate_salaries['test_assoc_levels_minimum_goals_02']
+        print("test_assoc_levels_minimum_goals_03")
+        data = "Some different to dict/JSON"
 
         real_result = assoc_levels_minimum_goals( data )
-        result_emulation = { 
-            'A' : 5,
-            'B' : 10,
-            'C' : 15
-        }
+        result_emulation = (False, 400, { 
+        })
         self.assertEqual(real_result, result_emulation)
 
     
@@ -135,6 +138,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can assoc minimum goals to a players
         """
+        print("test_assoc_minimum_goals_to_players_01")
         jugadores = input_calculate_salaries['test_assoc_minimum_goals_to_players_01']['jugadores']
         niveles = input_calculate_salaries['test_assoc_minimum_goals_to_players_01']['niveles_goles_assoc']
 
@@ -187,6 +191,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can assoc minimum goals to a players
         """
+        print("test_assoc_minimum_goals_to_players_02")
         jugadores = input_calculate_salaries['test_assoc_minimum_goals_to_players_02']['jugadores']
         niveles = input_calculate_salaries['test_assoc_minimum_goals_to_players_01']['niveles_goles_assoc']
 
@@ -239,6 +244,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can sum values of dicts in a dict list
         """
+        print("test_sum_team_goals_minimum_01")
         data = input_calculate_salaries['test_sum_team_goals_minimum_01']
 
         real_result = sum_team_goals_minimum( data )
@@ -249,6 +255,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can sum values of dicts in a dict list
         """
+        print("test_sum_team_goals_minimum_02")
         data = input_calculate_salaries['test_sum_team_goals_minimum_02']
 
         real_result = sum_team_goals_minimum( data )
@@ -260,6 +267,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can filter and return only the players with a team or with a valid name of team
         """
+        print("test_check_player_has_team_01")
         data = input_calculate_salaries['test_check_player_has_team_01']['jugador']
 
         real_result = check_player_has_team( data )
@@ -279,6 +287,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can filter and return only the players with a team or with a valid name of team
         """
+        print("test_check_player_has_team_02")
         data = input_calculate_salaries['test_check_player_has_team_02']['jugador']
 
         real_result = check_player_has_team( data )
@@ -289,6 +298,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can filter and return only the players with a team or with a valid name of team
         """
+        print("test_check_player_has_team_03")
         data = input_calculate_salaries['test_check_player_has_team_03']['jugador']
 
         real_result = check_player_has_team( data )
@@ -299,6 +309,7 @@ class TestCalculateSalaries(unittest.TestCase):
         """
         Test that it can filter and return only the players with a team or with a valid name of team
         """
+        print("test_get_players_with_team_01")
         data = input_calculate_salaries['test_get_players_with_team_01']
 
         real_result = get_players_with_team( data )
@@ -333,6 +344,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can assoc the goal and the scored goals 
         for each team of a list of players
         """
+        print("test_assoc_team_goal_and_scored_goals_01")
 
         data = input_calculate_salaries['test_assoc_minimum_goals_to_players_02']['jugadores']
 
@@ -355,6 +367,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can assoc the goal and the scored goals 
         for each team of a list of players
         """
+        print("test_assoc_team_goal_and_scored_goals_02")
 
         data = input_calculate_salaries['test_assoc_team_goal_and_scored_goals_02']['jugadores']
 
@@ -381,7 +394,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can calculate de generic compliance according a goal and scored goals
         when scored is equals or greater than goal
         """
-
+        print("test_calculate_generic_compliance_01")
         data = input_calculate_salaries['test_calculate_generic_compliance']['test_01']
 
         real_result = calculate_generic_compliance( data['scored_goals'], data['goal_goals'] )
@@ -399,7 +412,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can calculate de generic compliance according a goal and scored goals
         when scored is smaller than goal
         """
-
+        print("test_calculate_generic_compliance_02")
         data = input_calculate_salaries['test_calculate_generic_compliance']['test_02']
 
         real_result = calculate_generic_compliance( data['scored_goals'], data['goal_goals'] )
@@ -416,7 +429,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it fails to calculate de generic compliance according a goal and scored goals
         when goal is zero
         """
-
+        print("test_calculate_generic_compliance_03")
         data = input_calculate_salaries['test_calculate_generic_compliance']['test_03']
 
         real_result = calculate_generic_compliance( data['scored_goals'], data['goal_goals'] )
@@ -432,7 +445,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can assoc the goal and the scored goals 
         for each team of a list of players
         """
-
+        print("test_calculate_teams_compliance_01")
         data = input_calculate_salaries['test_assoc_minimum_goals_to_players_02']['jugadores']
 
         real_result = calculate_teams_compliance( data )
@@ -449,6 +462,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it can assoc the goal and the scored goals 
         for each team of a list of players
         """
+        print("test_calculate_teams_compliance_02")
 
         data = input_calculate_salaries['test_assoc_team_goal_and_scored_goals_02']['jugadores']
 
@@ -466,7 +480,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the joint compliance like an average of 2 compliances, 
         the team compliance and individual compliance
         """
-
+        print("test_calculate_joint_compliance_01")
         data = input_calculate_salaries['test_calculate_joint_compliance']['test_01']
 
         real_result = calculate_joint_compliance( data['individual_compliance'], data['team_compliance'] )
@@ -478,7 +492,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the joint compliance like an average of 2 compliances, 
         the team compliance and individual compliance
         """
-
+        print("test_calculate_joint_compliance_02")
         data = input_calculate_salaries['test_calculate_joint_compliance']['test_02']
 
         real_result = calculate_joint_compliance( data['individual_compliance'], data['team_compliance'] )
@@ -490,6 +504,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the joint compliance like an average of 2 compliances, 
         the team compliance and individual compliance
         """
+        print("test_calculate_joint_compliance_03")
 
         data = input_calculate_salaries['test_calculate_joint_compliance']['test_03']
 
@@ -502,6 +517,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
+        print("test_calculate_bonus_player_01")
 
         data = input_calculate_salaries['test_calculate_bonus_player']['test_01']
 
@@ -514,7 +530,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
-
+        print("test_calculate_bonus_player_02")
         data = input_calculate_salaries['test_calculate_bonus_player']['test_02']
 
         real_result = calculate_bonus_player( data['joint_compliance'], data['bonus'] )
@@ -527,6 +543,8 @@ class TestCalculateSalaries(unittest.TestCase):
         and the bonus
         """
 
+        print("test_calculate_bonus_player_03")
+
         data = input_calculate_salaries['test_calculate_bonus_player']['test_03']
 
         real_result = calculate_bonus_player( data['joint_compliance'], data['bonus'] )
@@ -538,6 +556,8 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
+
+        print("test_get_bonus_player_01")
 
         data = input_calculate_salaries['test_get_bonus_player']['test_01']
         real_result = get_bonus_player( data['player'], data['teams_compliance'] )
@@ -553,6 +573,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
+        print("test_get_bonus_player_02")
 
         data = input_calculate_salaries['test_get_bonus_player']['test_02']
         real_result = get_bonus_player( data['player'], data['teams_compliance'] )
@@ -568,6 +589,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
+        print("test_get_bonus_player_03")
 
         data = input_calculate_salaries['test_get_bonus_player']['test_03']
         real_result = get_bonus_player( data['player'], data['teams_compliance'] )
@@ -583,6 +605,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
+        print("test_calculate_salary_for_player_01")
 
         data = input_calculate_salaries['test_get_bonus_player']['test_01']
         real_result = calculate_salary_for_player( data['player'], data['teams_compliance'] )
@@ -599,6 +622,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
+        print("test_calculate_salary_for_player_02")
 
         data = input_calculate_salaries['test_get_bonus_player']['test_02']
         real_result = calculate_salary_for_player( data['player'], data['teams_compliance'] )
@@ -615,7 +639,7 @@ class TestCalculateSalaries(unittest.TestCase):
         Test that it calculate the final bonus of a player according the joint compliance
         and the bonus
         """
-
+        print("test_calculate_salary_for_player_03")
         data = input_calculate_salaries['test_get_bonus_player']['test_03']
         real_result = calculate_salary_for_player( data['player'], data['teams_compliance'] )
         #i_c = 80
@@ -625,6 +649,59 @@ class TestCalculateSalaries(unittest.TestCase):
         #s = 2600
         result_emulation = 2800
         self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_individual_compliance_01(self):
+        """
+        Test that it calculate the individual compliance of a player according his level, scored
+        goals and goal goals.
+        """
+        print("test_calculate_individual_compliance_01")
+        data = input_calculate_salaries['test_calculate_individual_compliance']['test_01']
+        real_result = calculate_individual_compliance( data )
+
+        result_emulation = {
+            'ok':True, 
+            'status_code':200, 
+            'description':{
+                'value':(12*100)/15
+            }
+        }
+        self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_individual_compliance_02(self):
+        """
+        Test that it calculate the individual compliance of a player according his level, scored
+        goals and goal goals.
+        """
+        print("test_calculate_individual_compliance_02")
+        data = input_calculate_salaries['test_calculate_individual_compliance']['test_02']
+        real_result = calculate_individual_compliance( data )
+
+        result_emulation = {
+            'ok':True, 
+            'status_code':200, 
+            'description':{
+                'value': 0
+            }
+        }
+        self.assertEqual( real_result, result_emulation )
+
+    def test_calculate_individual_compliance_03(self):
+        """
+        Test that it calculate the individual compliance of a player according his level, scored
+        goals and goal goals.
+        """
+        print("test_calculate_individual_compliance_03")
+        data = input_calculate_salaries['test_calculate_individual_compliance']['test_03']
+        real_result = calculate_individual_compliance( data )
+
+        result_emulation = {
+            'ok':False, 
+            'status_code':500, 
+            'description': 'Zero value provided for goal.'
+        }
+        self.assertEqual( real_result, result_emulation )
+
 
     
 
