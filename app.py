@@ -64,7 +64,7 @@ def pred_route() -> template_rendered:
     return render_template("main.html")
 
 @app.route(FLASK_PREFIX_APP+"/reset-levels", methods=["GET"])
-def receive_levels() -> json:
+def reset_levels() -> json:
     """
     Este endpoint pretende reiniciar a los valores iniciales 
     de los niveles y goles mínimos del Resuelve FC.
