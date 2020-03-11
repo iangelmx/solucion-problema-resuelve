@@ -21,10 +21,21 @@ def return_fatal_error_to_client( response_funct ):
     else:
         return False
 
+def verify_process_output( players : list ) -> tuple:
+    try:
+        if len(players) > 0:
+            return 200, True
+        else:
+            return 400, False
+    except Exception as ex:
+        print("Warning while checking output, players:",players)
+        return 500, False
+
+
 ''' Functions to map, filter or reduce '''
 
 def check_level_goal( level ):
-    if level.get('nivel') and level.get('goles_minimos'):
+    if isinstance(level, dict) and level.get('nivel') and level.get('goles_minimos'):
         return level
 
 def check_player_has_team( player : dict ) -> dict:
@@ -54,7 +65,10 @@ def assoc_levels_minimum_goals(levels : list) -> dict:
     for level in valid_levels:
         level_minimum[ level.get('nivel') ] = level.get('goles_minimos')
 
-    return level_minimum
+    if len(level_minimum) > 0:
+        return (True, 200, level_minimum)
+    return (False, 400, level_minimum)
+
 
 def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
     player_copy = copy(player)
@@ -101,7 +115,7 @@ def validate_dict_output_funct( response_funct : object ) -> bool:
     if response_funct.get('ok') == True:
         return True
     else:
-        print(f"Status error: {response_funct.get('status_code')}. Details: {response_funct.get('description')}")
+        #print(f"Status error: {response_funct.get('status_code')}. Details: {response_funct.get('description')}")
         return False
 
 def calculate_generic_compliance( scored : int, goal : int ) -> dict:
@@ -136,7 +150,7 @@ def calculate_individual_compliance( player : dict ) -> dict:
     scored = player.get('goles', 0)
     goal = player.get('goles_minimos', 0)
     compliance = 100
-    if scored < goal:
+    if scored < goal or not scored or not goal:
         compliance = calculate_generic_compliance( scored, goal )
         if validate_dict_output_funct(compliance):
             compliance = compliance.get('description',{}).get('value',0)
