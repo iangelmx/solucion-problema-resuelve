@@ -18,7 +18,7 @@
 
 
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, request, redirect, render_template
+from flask import Flask, jsonify, request, redirect, render_template, template_rendered
 import tasks.calculate_salaries
 from tasks.calculate_salaries import *
 import json
@@ -56,7 +56,7 @@ def intServErr(error):
 ########################################################################################
 
 @app.route("/")
-def pred_route() -> flask.template_rendered:
+def pred_route() -> template_rendered:
     """Cuando se hace una petición a la raíz de la aplicación
      Se retorna el template con una pequeña explicación de como
      se puede invocar a los demás endpoints."""
@@ -64,7 +64,7 @@ def pred_route() -> flask.template_rendered:
     return render_template("main.html")
 
 @app.route(FLASK_PREFIX_APP+"/reset-levels", methods=["GET"])
-def receive_levels() -> dict:
+def receive_levels() -> json:
     """
     Este endpoint pretende reiniciar a los valores iniciales 
     de los niveles y goles mínimos del Resuelve FC.
@@ -79,7 +79,7 @@ def receive_levels() -> dict:
 
 
 @app.route(FLASK_PREFIX_APP+"/receive-levels", methods=["POST"])
-def receive_levels():
+def receive_levels() -> json:
     """
     Este endpoint recibe los niveles y goles mínimos asociados
     a otros clubes, para que puedan calcular el bono de sus jugadores.
@@ -105,7 +105,7 @@ def receive_levels():
     return jsonify(ok=current_levels[0], status_code=current_levels[1], description={'saved_levels':current_levels[3]} )
 
 @app.route(FLASK_PREFIX_APP+"/calculate-salaries", methods=["POST"])
-def receive_players():
+def receive_players() -> json:
     """
     El presente endpoint calcula el sueldo completo de los jugadores del
     Resuelve FC y de otros clubes de acuerdo a su sueldo, bono y alcance conjunto de cada
