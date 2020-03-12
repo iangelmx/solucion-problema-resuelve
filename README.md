@@ -85,6 +85,8 @@ La solución funcionará bajo una aplicación web con diseño estructurado, semi
 		 * check_required_keys
 			 * validate_value_key
 			 * check_desired_input_types
+				 * get_desired_types_constant
+      
 	 *  ***Asociar goles  mínimos a los jugadores***: Este proceso da una pasada a los jugadores recibidos y les asigna los goles mínimos que debieron anotar de acuerdo a su nivel.
 	 * ***Calcular el alcance de los equipos***: Es el proceso que, con base en los goles anotados y niveles de los jugadores, calcula el alcance de cada equipo y lo devuelve al resto del flujo. Las funciones involucradas en este proceso son:
 		 * assoc_goal_and_scored_goals_per_team
@@ -204,11 +206,81 @@ Ejemplo de JSON de entrada:
    }
 ]
 ```
+Ejemplo de respuesta del endpoint:
+```
+{
+    "description": {
+        "players_salary": [
+            {
+                "bono": 25000,
+                "equipo": "rojo",
+                "goles": 10,
+                "goles_minimos": 15,
+                "nombre": "Juan Perez",
+                "sueldo": 50000,
+                "sueldo_completo": 66666.66666666667
+            },
+            {
+                "bono": 30000,
+                "equipo": "azul",
+                "goles": 30,
+                "goles_minimos": 20,
+                "nombre": "EL Cuauh",
+                "sueldo": 100000,
+                "sueldo_completo": 100000
+            }
+        ]
+    },
+    "ok": 200,
+    "status_code": true
+}
+```
 
 Para actualizar los niveles y goles mínimos:
 **Sólo tolera peticiones POST**
 [https://ws-solucion-problema-resuelve.herokuapp.com/resuelve/receive-levels](https://ws-solucion-problema-resuelve.herokuapp.com/resuelve/receive-levels)
+Ejemplo de JSON entrada:
+```
+[
+    {
+       "nivel" : "A",
+       "goles_minimos" : 5
+    },
+    {
+       "nivel" : "B",
+       "goles_minimos" : 10
+    }
+ ]
+```
+Ejemplo de respuesta de endpoint:
+```
+{
+    "description": {
+        "saved_levels": {
+            "A": 5,
+            "B": 10
+        }
+    },
+    "ok": true,
+    "status_code": 200
+}
+```
 
 Para reestablecer a los niveles predeterminados del Resuelve FC:
 **Sólo tolera peticiones GET**
 [https://ws-solucion-problema-resuelve.herokuapp.com/resuelve/reset-levels](https://ws-solucion-problema-resuelve.herokuapp.com/resuelve/reset-levels)
+Ejemplo de respuesta de endpoint:
+```
+{
+    "description": {
+        "saved_levels": {
+            "A": 5,
+            "B": 10,
+            "C": 15,
+            "Cuauh": 20
+        }
+    },
+    "ok": true,
+    "status_code": 200
+}
+```

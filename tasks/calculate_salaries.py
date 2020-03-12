@@ -15,23 +15,31 @@ def add_key_value_in_dict( key : object, dict_in : dict, assign_value = None ) -
     else:
         return None
 
+def get_desired_types_constant( kind_input : str ) -> dict:
+    if kind_input == 'players': 
+        return copy(tasks.constants.DESIRED_DATA_TYPES_P)
+    else:
+        return copy(tasks.constants.DESIRED_DATA_TYPES_L)
+
 ''' Functions to map, filter or reduce '''
 
-def check_desired_input_types(key : object, player :dict) -> bool:
-    data_types = copy(tasks.constants.DESIRED_DATA_TYPES)
+def check_desired_input_types(key : object, player : dict, kind_input : str) -> bool:
+    print("Args for check_derised_input_types:", key,player,kind_input)
+    data_types = get_desired_types_constant( kind_input )
     if key in data_types.keys():
         for data_type in data_types.get(key):
             if isinstance(player.get(key), data_type): return False
         return True
     else: return True
 
-def validate_value_key( key : object,  player:dict ) -> object:
+def validate_value_key( key : object,  player : dict ) -> object:
+    print("Key:", key," | player:", player)
     if key not in player.keys() or player.get(key) is None:
         return key
 
-def check_required_keys( required_keys : list, dictionary :dict) -> list:
+def check_required_keys( required_keys : list, dictionary :dict, kind_input : str) -> list:
     necesary = copy(required_keys)
-    missing_keys_invalid_values = [ x for x in necesary if (validate_value_key(x, dictionary) or check_desired_input_types(x, dictionary))]
+    missing_keys_invalid_values = [ x for x in necesary if (validate_value_key(x, dictionary) or check_desired_input_types(x, dictionary, kind_input))]
     return missing_keys_invalid_values
 
 def check_level_goal( level : object ) -> dict:
@@ -54,10 +62,13 @@ def verify_process_output( players : list ) -> tuple:
         #print("Warning while checking output, players:",players)
         return 500, False
 
-def check_keys_values_for_input(required_keys : list, players_json : list) -> list:
+def check_keys_values_for_input(required_keys : list, json_input : list, kind_input : str ='players') -> list:
     response = [ 
-        {'player':player, 'missing_keys_or_bad_value_for': check_required_keys(required_keys, player)} 
-            for player in players_json if check_required_keys(required_keys, player) 
+        {
+            'player':player, 
+            'missing_keys_or_bad_value_for': check_required_keys(required_keys, player, kind_input)
+        } 
+        for player in json_input if check_required_keys(required_keys, player, kind_input) 
     ]    
     return response
 
