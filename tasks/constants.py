@@ -24,13 +24,17 @@ NECESARY_KEYS_PLAYER = [
     "goles", "nivel", "equipo", "bono", "sueldo", "nombre"
 ]
 
-DESIRED_DATA_TYPES = {
+DESIRED_DATA_TYPES_P = {
     'goles' : [int],
     'nivel' : [str],
-    'equipo' : [str],
+    'equipo' : [str, int],
     'bono' : [int, float],
     'sueldo' : [int, float],
     'nombre' : [str]
+}
+DESIRED_DATA_TYPES_L = {
+    'goles_minimos' : [int],
+    'nivel' : [str, int],
 }
 
 NECESARY_KEYS_LEVELS = [

@@ -75,7 +75,7 @@ def reset_levels() -> json:
     """
     current_levels = assoc_levels_minimum_goals( env['metas_predeterminadas'] )
 
-    return jsonify(ok=current_levels[0], status_code=current_levels[1], description={'saved_levels':current_levels[3]} )
+    return jsonify(ok=current_levels[0], status_code=current_levels[1], description={'saved_levels':current_levels[2]} )
 
 
 @app.route(FLASK_PREFIX_APP+"/receive-levels", methods=["POST"])
@@ -101,11 +101,12 @@ def receive_levels() -> json:
     """
     global current_levels
     new_levels = request.json
-    invalid_levels = check_keys_values_for_input(tasks.constants.NECESARY_KEYS_LEVELS, new_levels)
+    invalid_levels = check_keys_values_for_input(tasks.constants.NECESARY_KEYS_LEVELS, new_levels, 'levels')
     if invalid_levels:
         return jsonify(ok=False, status_code = 400, description={'details_error':'Some levels does not have some required keys or have invalid values for keys', 'invalid_levels':invalid_levels})
     current_levels = assoc_levels_minimum_goals( new_levels )
-    return jsonify(ok=current_levels[0], status_code=current_levels[1], description={'saved_levels':current_levels[3]} )
+    print("Current_levels",current_levels)
+    return jsonify(ok=current_levels[0], status_code=current_levels[1], description={'saved_levels':current_levels[2]} )
 
 @app.route(FLASK_PREFIX_APP+"/calculate-salaries", methods=["POST"])
 def receive_players() -> json:
