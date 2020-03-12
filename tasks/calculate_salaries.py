@@ -31,6 +31,30 @@ def verify_process_output( players : list ) -> tuple:
         print("Warning while checking output, players:",players)
         return 500, False
 
+def check_desired_input_values(key, player):
+    data_types = copy(tasks.constants.DESIRED_DATA_TYPES)
+    if key in data_types.keys():
+        for data_type in data_types.get(key):
+            if isinstance(player.get(key), data_type): return False
+        return True
+    else: return True
+
+def validate_value_key( key,  player ):
+    if key not in player.keys() or player.get(key) is None:
+        return key
+
+def check_required_keys_json( required_keys, dictionary ):
+    necesary = copy(required_keys)
+    missing_keys_invalid_values = [ x for x in necesary if (validate_value_key(x, dictionary) or check_desired_input_values(x, dictionary))]
+    return missing_keys_invalid_values
+
+def check_keys_values_for_input_players(required_keys,players_json):
+    response = [ 
+        {'player':player, 'missing_keys_or_bad_value_for': check_required_keys_json(required_keys, player)} 
+            for player in players_json if check_required_keys_json(required_keys, player) 
+    ]    
+    return response
+
 
 ''' Functions to map, filter or reduce '''
 
@@ -76,6 +100,8 @@ def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
     return player_copy
 
 def assoc_minimum_goals_to_players( players_json : dict, levels_goals : dict) -> dict:
+    print("Levels goals:",levels_goals)
+    print("Players_json:",players_json)
     maping_goals_players = map( 
         lambda x: x.update( { 'goles_minimos' : levels_goals.get( x.get('nivel') ) } ) or x , 
         players_json 
@@ -150,12 +176,13 @@ def calculate_individual_compliance( player : dict ) -> dict:
     scored = player.get('goles', 0)
     goal = player.get('goles_minimos', 0)
     compliance = 100
-    if scored < goal or not scored or not goal:
+    if goal and scored and scored < goal:
         compliance = calculate_generic_compliance( scored, goal )
         if validate_dict_output_funct(compliance):
             compliance = compliance.get('description',{}).get('value',0)
-        else:
-            return tasks.constants.INCORRECT_CALCULATION
+        else: return tasks.constants.INCORRECT_CALCULATION
+    else: return tasks.constants.INCORRECT_CALCULATION_NONE_VALUE
+    
     return get_response_correct_calculation(compliance)
     
 def get_team_compliance( player : dict, compliances:dict ) -> float:
@@ -163,27 +190,37 @@ def get_team_compliance( player : dict, compliances:dict ) -> float:
     return compliances.get( team_player, 0 )
 
 def calculate_joint_compliance( individual_compliance:float, team_compliance :float ) -> float:
-    return (individual_compliance + team_compliance) / 2
+    if individual_compliance and team_compliance:
+        return (individual_compliance + team_compliance) / 2
+    else: return 0
 
 def calculate_bonus_player( joint_compliance : float, complete_bonus : float ) -> float:
-    return complete_bonus * ( joint_compliance / 100 )
+    if joint_compliance and complete_bonus:
+        return complete_bonus * ( joint_compliance / 100 )
+    else: return 0
 
 def get_bonus_player(player : dict, teams_compliance:dict) -> float:
     individual_compliance = calculate_individual_compliance( player ).get('description', {}).get('value',0)
     team_compliance = get_team_compliance( player, teams_compliance )
+    print("The team compliance for player is:", team_compliance)
 
     joint_compliance = calculate_joint_compliance( individual_compliance, team_compliance )
 
-    final_bonus = calculate_bonus_player( joint_compliance, player.get('bono') )
+    final_bonus = calculate_bonus_player( joint_compliance, player.get('bono', 0) )
     return final_bonus
 
 def calculate_salary_for_player(player : dict, teams_compliance : dict) -> float:
-    fixed_salary = player.get('sueldo',0)
-    bonus = get_bonus_player(player, teams_compliance)
-    return sum([fixed_salary, bonus])
+    try:
+        fixed_salary = player.get('sueldo',0)
+        bonus = get_bonus_player(player, teams_compliance)
+        return sum([fixed_salary, bonus])
+    except Exception as ex:
+        return None
 
 def get_complete_salary_for_player(player : dict, teams_compliance : dict)->dict:
     new_player = copy(player)
     new_player['sueldo_completo'] = calculate_salary_for_player( player, teams_compliance )
+    if new_player['sueldo_completo'] is None:
+        new_player['error'] = "Unable to calculate salary for bad values in input"
     new_player = remove_dict_keys(['nivel'], new_player)
     return new_player
