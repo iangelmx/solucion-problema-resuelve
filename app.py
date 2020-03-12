@@ -101,7 +101,7 @@ def receive_levels() -> json:
     """
     global current_levels
     new_levels = request.json
-    invalid_levels = check_keys_values_for_input_players(tasks.constants.NECESARY_KEYS_LEVELS, new_levels)
+    invalid_levels = check_keys_values_for_input(tasks.constants.NECESARY_KEYS_LEVELS, new_levels)
     if invalid_levels:
         return jsonify(ok=False, status_code = 400, description={'details_error':'Some levels does not have some required keys or have invalid values for keys', 'invalid_levels':invalid_levels})
     current_levels = assoc_levels_minimum_goals( new_levels )
@@ -147,7 +147,7 @@ def receive_players() -> json:
         
     """
     input_data = request.json
-    invalid_players = check_keys_values_for_input_players(tasks.constants.NECESARY_KEYS_PLAYER, input_data)
+    invalid_players = check_keys_values_for_input(tasks.constants.NECESARY_KEYS_PLAYER, input_data)
     if invalid_players:
         return jsonify(ok=False, status_code = 400, description={'details_error':'Some players does not have some required keys or have invalid values for keys', 'invalid_players':invalid_players})
     players = assoc_minimum_goals_to_players( input_data, current_levels )    

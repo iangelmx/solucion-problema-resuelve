@@ -15,11 +15,34 @@ def add_key_value_in_dict( key : object, dict_in : dict, assign_value = None ) -
     else:
         return None
 
-def return_fatal_error_to_client( response_funct ):
-    if isinstance(response_funct, dict) and response_funct.get('ok') == False:
-        return response_funct
-    else:
-        return False
+''' Functions to map, filter or reduce '''
+
+def check_desired_input_types(key : object, player :dict) -> bool:
+    data_types = copy(tasks.constants.DESIRED_DATA_TYPES)
+    if key in data_types.keys():
+        for data_type in data_types.get(key):
+            if isinstance(player.get(key), data_type): return False
+        return True
+    else: return True
+
+def validate_value_key( key : object,  player:dict ) -> object:
+    if key not in player.keys() or player.get(key) is None:
+        return key
+
+def check_required_keys( required_keys : list, dictionary :dict) -> list:
+    necesary = copy(required_keys)
+    missing_keys_invalid_values = [ x for x in necesary if (validate_value_key(x, dictionary) or check_desired_input_types(x, dictionary))]
+    return missing_keys_invalid_values
+
+def check_level_goal( level : object ) -> dict:
+    if isinstance(level, dict) and level.get('nivel') and level.get('goles_minimos'):
+        return level
+
+def check_player_has_team( player : dict ) -> dict:
+    if player.get('equipo'):
+        return player
+
+'''Kind of helpers'''
 
 def verify_process_output( players : list ) -> tuple:
     try:
@@ -28,46 +51,15 @@ def verify_process_output( players : list ) -> tuple:
         else:
             return 400, False
     except Exception as ex:
-        print("Warning while checking output, players:",players)
+        #print("Warning while checking output, players:",players)
         return 500, False
 
-def check_desired_input_values(key, player):
-    data_types = copy(tasks.constants.DESIRED_DATA_TYPES)
-    if key in data_types.keys():
-        for data_type in data_types.get(key):
-            if isinstance(player.get(key), data_type): return False
-        return True
-    else: return True
-
-def validate_value_key( key,  player ):
-    if key not in player.keys() or player.get(key) is None:
-        return key
-
-def check_required_keys_json( required_keys, dictionary ):
-    necesary = copy(required_keys)
-    missing_keys_invalid_values = [ x for x in necesary if (validate_value_key(x, dictionary) or check_desired_input_values(x, dictionary))]
-    return missing_keys_invalid_values
-
-def check_keys_values_for_input_players(required_keys,players_json):
+def check_keys_values_for_input(required_keys : list, players_json : list) -> list:
     response = [ 
-        {'player':player, 'missing_keys_or_bad_value_for': check_required_keys_json(required_keys, player)} 
-            for player in players_json if check_required_keys_json(required_keys, player) 
+        {'player':player, 'missing_keys_or_bad_value_for': check_required_keys(required_keys, player)} 
+            for player in players_json if check_required_keys(required_keys, player) 
     ]    
     return response
-
-
-''' Functions to map, filter or reduce '''
-
-def check_level_goal( level ):
-    if isinstance(level, dict) and level.get('nivel') and level.get('goles_minimos'):
-        return level
-
-def check_player_has_team( player : dict ) -> dict:
-    if player.get('equipo'):
-        return player
-
-
-'''Kind of helpers'''
 
 def get_response_correct_calculation( value : object ) -> dict:
     response = copy(tasks.constants.CORRECT_CALCULATION)
@@ -79,8 +71,6 @@ def sum_team_goals_minimum( team_players : list ) -> int:
         return sum(player['goles_minimos'] for player in team_players)
     except Exception:
         return {'ok':False, 'status_code': 404,'description':'There is not indicated "goles_minimos" for at least 1 team'}
-
-
 
 def assoc_levels_minimum_goals(levels : list) -> dict:
     level_minimum = {}
@@ -94,14 +84,7 @@ def assoc_levels_minimum_goals(levels : list) -> dict:
     return (False, 400, level_minimum)
 
 
-def assoc_minimum_goals_to_player(player : dict, min_goals: int) -> dict:
-    player_copy = copy(player)
-    player_copy['goles_minimos'] = min_goals
-    return player_copy
-
 def assoc_minimum_goals_to_players( players_json : dict, levels_goals : dict) -> dict:
-    print("Levels goals:",levels_goals)
-    print("Players_json:",players_json)
     maping_goals_players = map( 
         lambda x: x.update( { 'goles_minimos' : levels_goals.get( x.get('nivel') ) } ) or x , 
         players_json 
@@ -202,20 +185,15 @@ def calculate_bonus_player( joint_compliance : float, complete_bonus : float ) -
 def get_bonus_player(player : dict, teams_compliance:dict) -> float:
     individual_compliance = calculate_individual_compliance( player ).get('description', {}).get('value',0)
     team_compliance = get_team_compliance( player, teams_compliance )
-    print("The team compliance for player is:", team_compliance)
-
     joint_compliance = calculate_joint_compliance( individual_compliance, team_compliance )
 
     final_bonus = calculate_bonus_player( joint_compliance, player.get('bono', 0) )
     return final_bonus
 
 def calculate_salary_for_player(player : dict, teams_compliance : dict) -> float:
-    try:
-        fixed_salary = player.get('sueldo',0)
-        bonus = get_bonus_player(player, teams_compliance)
-        return sum([fixed_salary, bonus])
-    except Exception as ex:
-        return None
+    fixed_salary = player.get('sueldo',0)
+    bonus = get_bonus_player(player, teams_compliance)
+    return sum([fixed_salary, bonus])
 
 def get_complete_salary_for_player(player : dict, teams_compliance : dict)->dict:
     new_player = copy(player)
