@@ -18,13 +18,14 @@ def add_key_value_in_dict( key : object, dict_in : dict, assign_value = None ) -
 def get_desired_types_constant( kind_input : str ) -> dict:
     if kind_input == 'players': 
         return copy(tasks.constants.DESIRED_DATA_TYPES_P)
-    else:
+    elif kind_input == 'levels':
         return copy(tasks.constants.DESIRED_DATA_TYPES_L)
+    else:
+        return {}
 
 ''' Functions to map, filter or reduce '''
 
 def check_desired_input_types(key : object, player : dict, kind_input : str) -> bool:
-    print("Args for check_derised_input_types:", key,player,kind_input)
     data_types = get_desired_types_constant( kind_input )
     if key in data_types.keys():
         for data_type in data_types.get(key):
@@ -33,7 +34,6 @@ def check_desired_input_types(key : object, player : dict, kind_input : str) -> 
     else: return True
 
 def validate_value_key( key : object,  player : dict ) -> object:
-    print("Key:", key," | player:", player)
     if key not in player.keys() or player.get(key) is None:
         return key
 
@@ -55,12 +55,12 @@ def check_player_has_team( player : dict ) -> dict:
 def verify_process_output( players : list ) -> tuple:
     try:
         if len(players) > 0:
-            return 200, True
+            return True, 200
         else:
-            return 400, False
+            return False, 400
     except Exception as ex:
         #print("Warning while checking output, players:",players)
-        return 500, False
+        return False, 500
 
 def check_keys_values_for_input(required_keys : list, json_input : list, kind_input : str ='players') -> list:
     response = [ 

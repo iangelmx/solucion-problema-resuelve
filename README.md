@@ -284,3 +284,15 @@ Ejemplo de respuesta de endpoint:
     "status_code": 200
 }
 ```
+
+## Forma de correr las pruebas unitarias:
+
+Basta con posicionarse en la carpeta de tests y en la consola ejecutar el comando:
+### En entornos linux:
+`python3 -m unittest`
+### En entornos Windows:
+`python -m unittest`
+
+Con eso se desplegará en la pantalla qué pruebas se estarán habrán ejecutado y el estatus de su ejecución.
+
+Cabe mencionar que los datos de entrada de las pruebas unitarias se encuentran en el archivo `.tests/input_tests_calculate_salaries.json`

@@ -10,7 +10,9 @@ from tasks.calculate_salaries import (separate_players_by_team, sum_scored_goals
                                         assoc_goal_and_scored_goals_per_team, calculate_teams_compliance,
                                         calculate_generic_compliance, calculate_joint_compliance,
                                         calculate_bonus_player, get_bonus_player, calculate_salary_for_player,
-                                        calculate_individual_compliance
+                                        calculate_individual_compliance, get_desired_types_constant,
+                                        check_desired_input_types, validate_value_key,
+                                        verify_process_output
                                         )
 
 input_calculate_salaries = json.loads(open("input_tests_calculate_salaries.json", "r").read())
@@ -704,10 +706,163 @@ class TestCalculateSalaries(unittest.TestCase):
         }
         self.assertEqual( real_result, result_emulation )
 
+    def test_get_desired_types_constant_01(self):
+        """
+        Test that it cant retrieve the correct constant for function
+        """
+        print("test_get_desired_types_constant_01")
+        data = input_calculate_salaries['test_get_desired_types_constant']['test_01']
+        real_result = get_desired_types_constant( data )
 
-    
+        result_emulation = {
+            'goles' : [int],
+            'nivel' : [str],
+            'equipo' : [str, int],
+            'bono' : [int, float],
+            'sueldo' : [int, float],
+            'nombre' : [str]
+        }
+        self.assertEqual( real_result, result_emulation )
 
+    def test_get_desired_types_constant_02(self):
+        """
+        Test that it cant retrieve the correct constant for function
+        """
+        print("test_get_desired_types_constant_02")
+        data = input_calculate_salaries['test_get_desired_types_constant']['test_02']
+        real_result = get_desired_types_constant( data )
+
+        result_emulation = {
+            'goles_minimos' : [int],
+            'nivel' : [str, int],
+        }
+        self.assertEqual( real_result, result_emulation )
     
+    def test_get_desired_types_constant_03(self):
+        """
+        Test that it cant retrieve the correct constant for function
+        """
+        print("test_get_desired_types_constant_03")
+        data = input_calculate_salaries['test_get_desired_types_constant']['test_03']
+        real_result = get_desired_types_constant( data )
+
+        result_emulation = {}
+        self.assertEqual( real_result, result_emulation )
+
+    def test_check_desired_input_types_01(self):
+        """
+        Test that it can check if input types are correct according the 
+        kind of input and the input dict
+        """
+        print("test_check_desired_input_types_01")
+        data = input_calculate_salaries['test_check_desired_input_types']['test_01']
+        real_result = check_desired_input_types( data['key'], data['dictionary'], data['kind_input'] )
+
+        result_emulation = True
+        self.assertEqual( real_result, result_emulation )
+
+    def test_check_desired_input_types_02(self):
+        """
+        Test that it can check if input types are correct according the 
+        kind of input and the input dict
+        """
+        print("test_check_desired_input_types_02")
+        data = input_calculate_salaries['test_check_desired_input_types']['test_02']
+        real_result = check_desired_input_types( data['key'], data['dictionary'], data['kind_input'] )
+
+        result_emulation = False
+        self.assertEqual( real_result, result_emulation )
+
+    def test_check_desired_input_types_03(self):
+        """
+        Test that it can check if input types are correct according the 
+        kind of input and the input dict
+        """
+        print("test_check_desired_input_types_03")
+        data = input_calculate_salaries['test_check_desired_input_types']['test_03']
+        real_result = check_desired_input_types( data['key'], data['dictionary'], data['kind_input'] )
+
+        result_emulation = False
+        self.assertEqual( real_result, result_emulation )
+
+    def test_check_desired_input_types_04(self):
+        """
+        Test that it can check if input types are correct according the 
+        kind of input and the input dict
+        """
+        print("test_check_desired_input_types_04")
+        data = input_calculate_salaries['test_check_desired_input_types']['test_04']
+        real_result = check_desired_input_types( data['key'], data['dictionary'], data['kind_input'] )
+
+        result_emulation = True
+        self.assertEqual( real_result, result_emulation )
+    
+    def test_validate_value_key_01(self):
+        """
+        Test that it can verify if key in dict and its value it not None
+        """
+        print("test_validate_value_key_01")
+        data = input_calculate_salaries['test_validate_value_key']['test_01']
+        real_result = validate_value_key( data['key'], data['player'] )
+
+        result_emulation = None
+        self.assertEqual( real_result, result_emulation )
+
+    def test_validate_value_key_02(self):
+        """
+        Test that it can verify if key in dict and its value it not None
+        """
+        print("test_validate_value_key_02")
+        data = input_calculate_salaries['test_validate_value_key']['test_02']
+        real_result = validate_value_key( data['key'], data['player'] )
+
+        result_emulation = data['key']
+        self.assertEqual( real_result, result_emulation )
+
+
+    def test_verify_process_output_01(self):
+        """
+        Test that it can verify if de output of a process is valid according his lenght
+        """
+        print("test_verify_process_output_01")
+        data = input_calculate_salaries['test_verify_process_output']['test_01']
+        real_result = verify_process_output( data )
+
+        result_emulation = (True, 200)
+        self.assertEqual( real_result, result_emulation )
+
+    def test_verify_process_output_02(self):
+        """
+        Test that it can verify if de output of a process is valid according his lenght
+        """
+        print("test_verify_process_output_02")
+        data = input_calculate_salaries['test_verify_process_output']['test_02']
+        real_result = verify_process_output( data )
+
+        result_emulation = (True, 200)
+        self.assertEqual( real_result, result_emulation )
+
+    def test_verify_process_output_03(self):
+        """
+        Test that it can verify if de output of a process is valid according his lenght
+        """
+        print("test_verify_process_output_03")
+        data = input_calculate_salaries['test_verify_process_output']['test_03']
+        real_result = verify_process_output( data )
+
+        result_emulation = (False, 400)
+        self.assertEqual( real_result, result_emulation )
+
+    def test_verify_process_output_04(self):
+        """
+        Test that it can verify if de output of a process is valid according his lenght
+        """
+        print("test_verify_process_output_04")
+        data = input_calculate_salaries['test_verify_process_output']['test_04']
+        real_result = verify_process_output( data )
+
+        result_emulation = (False, 500)
+        self.assertEqual( real_result, result_emulation )
     
 
 
