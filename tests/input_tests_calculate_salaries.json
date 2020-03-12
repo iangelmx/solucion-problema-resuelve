@@ -508,5 +508,68 @@
          "Holi":true
       }
    }
+   ,
+   "test_get_desired_types_constant":{
+      "test_01" : "players",
+      "test_02" : "levels",
+      "test_03" : "another_value"
+   }
+   ,
+   "test_check_desired_input_types":{
+      "test_01" : {
+         "key" : "nivel",
+         "dictionary" : {
+            "nivel":90
+         },
+         "kind_input" : "players"
+      },
+      "test_02" : {
+         "key": "nivel",
+         "dictionary" : {
+            "nivel":"90"
+         },
+         "kind_input":"players"
+      },
+      "test_03" : {
+         "key":"goles_minimos",
+         "dictionary" : {
+            "goles_minimos":90, "nivel":"A"
+         },
+         "kind_input": "levels"
+      },
+      "test_04" : {
+         "key":"another",
+         "dictionary" : {
+            "nivel":"90","goles_minimos":10
+         },
+         "kind_input": "levels"
+      }
+   }
+   ,
+   "test_validate_value_key":{
+      "test_01":{
+         "key" : "some_key",
+         "player" : {
+            "some_key" : 20
+         }
+      },
+      "test_02":{
+         "key" : "nivel",
+         "player" : {
+            "nivel" : null
+         }
+      }
+   }
+   ,
+   "test_verify_process_output":{
+      "test_01":[
+         "Some_item"
+      ],
+      "test_02":[
+         {"a":1, "b":2}
+      ],
+      "test_03": [],
+      "test_04": 5
+   }
 
 }
