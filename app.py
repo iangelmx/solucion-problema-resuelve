@@ -27,7 +27,7 @@ env = json.loads( open("settings.json", "r").read() )
 FLASK_PREFIX_APP = env['prefix_api']
 
 app = Flask(__name__)
-current_levels = assoc_levels_minimum_goals( env['metas_predeterminadas'] )
+current_levels = assoc_levels_minimum_goals( env['metas_predeterminadas'] )[2]
 
 ########################################################################################
 ######################
@@ -64,7 +64,7 @@ def pred_route() -> template_rendered:
     return render_template("main.html")
 
 @app.route(FLASK_PREFIX_APP+"/reset-levels", methods=["GET"])
-def receive_levels() -> json:
+def reset_levels() -> json:
     """
     Este endpoint pretende reiniciar a los valores iniciales 
     de los niveles y goles mínimos del Resuelve FC.
@@ -101,6 +101,9 @@ def receive_levels() -> json:
     """
     global current_levels
     new_levels = request.json
+    invalid_levels = check_keys_values_for_input_players(tasks.constants.NECESARY_KEYS_LEVELS, new_levels)
+    if invalid_levels:
+        return jsonify(ok=False, status_code = 400, description={'details_error':'Some levels does not have some required keys or have invalid values for keys', 'invalid_levels':invalid_levels})
     current_levels = assoc_levels_minimum_goals( new_levels )
     return jsonify(ok=current_levels[0], status_code=current_levels[1], description={'saved_levels':current_levels[3]} )
 
@@ -144,7 +147,10 @@ def receive_players() -> json:
         
     """
     input_data = request.json
-    players = assoc_minimum_goals_to_players( input_data, current_levels )
+    invalid_players = check_keys_values_for_input_players(tasks.constants.NECESARY_KEYS_PLAYER, input_data)
+    if invalid_players:
+        return jsonify(ok=False, status_code = 400, description={'details_error':'Some players does not have some required keys or have invalid values for keys', 'invalid_players':invalid_players})
+    players = assoc_minimum_goals_to_players( input_data, current_levels )    
     teams_compliance = calculate_teams_compliance(input_data)
     players = [ get_complete_salary_for_player(x, teams_compliance) for x in players ]
 
