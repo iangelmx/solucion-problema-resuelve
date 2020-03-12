@@ -170,23 +170,29 @@ def calculate_individual_compliance( player : dict ) -> dict:
     scored = player.get('goles', 0)
     goal = player.get('goles_minimos', 0)
     compliance = 100
-    if goal and scored and scored < goal:
+    if scored < goal:
         compliance = calculate_generic_compliance( scored, goal )
         if validate_dict_output_funct(compliance):
             compliance = compliance.get('description',{}).get('value',0)
         else: return tasks.constants.INCORRECT_CALCULATION
-    else: return tasks.constants.INCORRECT_CALCULATION_NONE_VALUE
-    
     return get_response_correct_calculation(compliance)
+
+    """
+    if scored>0:
+        if scored < goal:
+            compliance = calculate_generic_compliance( scored, goal )
+            if validate_dict_output_funct(compliance):
+                compliance = compliance.get('description',{}).get('value',0)
+            else: return tasks.constants.INCORRECT_CALCULATION
+    else: return tasks.constants.INCORRECT_CALCULATION_NONE_VALUE
+    return get_response_correct_calculation(compliance)"""
     
 def get_team_compliance( player : dict, compliances:dict ) -> float:
     team_player = player.get('equipo')
     return compliances.get( team_player, 0 )
 
 def calculate_joint_compliance( individual_compliance:float, team_compliance :float ) -> float:
-    if individual_compliance and team_compliance:
-        return (individual_compliance + team_compliance) / 2
-    else: return 0
+    return (individual_compliance + team_compliance) / 2
 
 def calculate_bonus_player( joint_compliance : float, complete_bonus : float ) -> float:
     if joint_compliance and complete_bonus:
@@ -209,7 +215,5 @@ def calculate_salary_for_player(player : dict, teams_compliance : dict) -> float
 def get_complete_salary_for_player(player : dict, teams_compliance : dict)->dict:
     new_player = copy(player)
     new_player['sueldo_completo'] = calculate_salary_for_player( player, teams_compliance )
-    if new_player['sueldo_completo'] is None:
-        new_player['error'] = "Unable to calculate salary for bad values in input"
     new_player = remove_dict_keys(['nivel'], new_player)
     return new_player
