@@ -681,7 +681,7 @@ class TestCalculateSalaries(unittest.TestCase):
             'ok':True, 
             'status_code':200, 
             'description':{
-                'value': 0
+                'value' : 0,
             }
         }
         self.assertEqual( real_result, result_emulation )
@@ -696,9 +696,11 @@ class TestCalculateSalaries(unittest.TestCase):
         real_result = calculate_individual_compliance( data )
 
         result_emulation = {
-            'ok':False, 
-            'status_code':500, 
-            'description': 'Zero value provided for goal.'
+            'ok':True, 
+            'status_code':200, 
+            'description':{
+                'value' : 100,
+            }
         }
         self.assertEqual( real_result, result_emulation )
 
